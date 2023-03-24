@@ -1,0 +1,7 @@
+<div class="invalid-feedback" *ngIf="mostrarError()">
+  <span *ngIf="control!.errors['required']">Este campo es requerido</span>
+  <span *ngIf="control.errors['max']">El valor máximo {{control.errors["max"]["max"]}}</span>
+  <span *ngIf="control.errors['min']">El valor mínimo {{control.errors["min"]["min"]}}</span>
+  <span *ngIf="control.errors['minlength']">Debe tener una longitud mínima de {{control.errors["minlength"]["requiredLength"]}}</span>
+  <span *ngIf="control.errors['maxlength']">Debe tener una longitud máxima de {{control.errors["maxlength"]["requiredLength"]}}</span>
+</div>

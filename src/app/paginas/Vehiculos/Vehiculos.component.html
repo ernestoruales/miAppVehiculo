@@ -1,0 +1,135 @@
+<div class="card text-white bg-dark">
+  <div class="card-header">
+    <h4>LISTA DE VEHICULOS</h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="mb-3">
+        <label class="form-label">FILTRAR POR:</label>
+        <input type="text" class="form-control" [(ngModel)]="filtrarPor" (input)="consultaVehiculos()">
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-6">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="inicializarFormulario()">Nuevo</button>
+      </div>
+    </div>
+    <hr>
+    <div class="row table-responsive">
+      <table class="table table-dark table-striped table-hover">
+        <thead>
+          <tr>
+            <th colspan="6">
+              <button class="btn btn-success" (click)="mostrarImagen = !mostrarImagen">Mostrar Imagenes</button>
+            </th>
+            <th>
+              <div class="input-group input-group-sm mb-3">
+                <span class="input-group-text" id="basic-addon1">Filas: </span>
+                <select class="form-select form-select-sm" [(ngModel)]="rows" (change)="cambioRows()">
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                </select>
+              </div>
+            </th>
+          </tr>
+          <tr>
+            <th>Imagen</th>
+            <th scope="col">Codigo</th>
+            <th scope="col">Marca</th>
+            <th scope="col">Modelo</th>
+            <th scope="col">Año</th>
+            <th scope="col">Calificación</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let vehiculo of listaVehiculo; let i=index">
+            <td style="width: 10%;">
+              <img class="img-thumbnail" [src]="vehiculo.foto" *ngIf="mostrarImagen">
+            </td>
+            <td>{{vehiculo.codigo}}</td>
+            <td>{{vehiculo.marca}}</td>
+            <td>{{vehiculo.modelo}}</td>
+            <td>{{vehiculo.anio}}</td>
+            <td>
+              <app-calificacion [calificacion]="vehiculo.calificacion" (select)="mostraAlerta($event)"></app-calificacion>
+            </td>
+            <td>
+              <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                <a class="btn btn-sm btn-primary" [routerLink]="[vehiculo.codigo]">Ver</a>
+                <button class="btn btn-sm btn-danger" (click)="elminarVehiculo(vehiculo)">Eliminar</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="7">
+              <app-PaginacionTabla [rows]="rows" [pages]="pages" (selectPage)="seleccionarPagina($event)"></app-PaginacionTabla>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" #exampleModal id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formularioVehiculo" class="needs-validation" [ngClass]="{'was-validated': wasValidated}">
+          <div class="mb-3">
+            <label for="formControlCodigo" class="form-label">Codigo</label>
+            <input type="text" class="form-control" id="formControlCodigo" formControlName="codigo" required minlength="3">
+            <app-mensajeValidacion [summited]="wasValidated" [control]="formularioVehiculo.controls['codigo']"></app-mensajeValidacion>
+          </div>
+
+          <div class="mb-3">
+            <label for="formControlMarca" class="form-label">Marca</label>
+            <input type="text" class="form-control" id="formControlMarca" formControlName="marca" required>
+            <app-mensajeValidacion [summited]="wasValidated" [control]="formularioVehiculo.controls['marca']"></app-mensajeValidacion>
+          </div>
+
+          <div class="mb-3">
+            <label for="formControlModelo" class="form-label">Modelo</label>
+            <input type="text" class="form-control" id="formControlModelo" formControlName="modelo" required>
+            <app-mensajeValidacion [summited]="wasValidated" [control]="formularioVehiculo.controls['modelo']"></app-mensajeValidacion>
+          </div>
+
+          <div class="mb-3">
+            <label for="formControlAnio" class="form-label">Año</label>
+            <input type="text" class="form-control" id="formControlAnio" formControlName="anio" minlength="4" required>
+            <app-mensajeValidacion [summited]="wasValidated" [control]="formularioVehiculo.controls['anio']"></app-mensajeValidacion>
+          </div>
+
+          <div class="mb-3">
+            <label for="formControlAnio" class="form-label">Calificación</label>
+            <input type="number" class="form-control" id="formControlAnio" formControlName="calificacion" max="5" min="1" required>
+            <app-mensajeValidacion [summited]="wasValidated" [control]="formularioVehiculo.controls['calificacion']"></app-mensajeValidacion>
+          </div>
+
+          <div class="mb-3">
+            <label for="formControlAnio" class="form-label">Imagen URL:</label>
+            <input type="url" class="form-control" id="formControlAnio" formControlName="foto">
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="guardarVehiculo()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
